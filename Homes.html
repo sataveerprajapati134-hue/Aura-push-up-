@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="My Shopes - Premium Buy & Sell Marketplace for All Products">
+    <title>My Shopes • Premium Buy & Sell Shopping</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@700&display=swap');
+        
+        :root {
+            --tw-color-primary: #00d4aa;
+        }
+        
+        * {
+            transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+            transition-duration: 150ms;
+        }
+        
+        .tailwind-ready * {
+            transition-property: none;
+        }
+        
+        .hero-bg {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
+        }
+        
+        .product-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 25px 50px -12px rgb(0 212 170 / 0.15);
+        }
+        
+        .navbar {
+            backdrop-filter: blur(12px);
+        }
+        
+        .modal {
+            animation: modalPop 0.3s ease forwards;
+        }
+        
+        @keyframes modalPop {
+            0% { opacity: 0; transform: scale(0.95); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        
+        .cart-slide {
+            animation: cartSlide 0.3s ease forwards;
+        }
+    </style>
+</head>
+<body class="bg-zinc-950 text-white font-sans tailwind-ready">
+    <!-- NAVBAR -->
+    <nav class="navbar bg-zinc-950/80 border-b border-white/10 sticky top-0 z-50">
+        <div class="max-w-screen-2xl mx-auto">
+            <div class="px-8 py-5 flex items-center justify-between">
+                
+                <!-- Logo -->
+                <div class="flex items-center gap-x-3">
+                    <div class="w-10 h-10 bg-[#00d4aa] rounded-2xl flex items-center justify-center shadow-inner">
+                        <i class="fa-solid fa-bag-shopping text-3xl text-white"></i>
+                    </div>
+                    <div>
+                        <span class="font-bold text-3xl tracking-[-1px]" style="font-family: 'Playfair Display', sans-serif;">My Shopes</span>
+                    </div>
+                    <span class="text-xs font-medium bg-white/10 text-white px-2.5 py-px rounded-3xl">PREMIUM</span>
+                </div>
+
+                <!-- Menu -->
+                <div class="hidden md:flex items-center gap-x-8 text-sm font-medium">
+                    <a onclick="navigateToSection('home')" class="hover:text-[#00d4aa] flex items-center gap-x-1">
+                        <i class="fa-solid fa-house"></i>
+                        <span>Home</span>
+                    </a>
+                    <a onclick="navigateToSection('shop')" class="hover:text-[#00d4aa]">Shop All</a>
+                    <a onclick="navigateToSection('sell')" class="hover:text-[#00d4aa]">Sell Now</a>
+                    <a onclick="navigateToSection('categories')" class="hover:text-[#00d4aa]">Categories</a>
+                    <a href="#" class="hover:text-[#00d4aa]">Deals</a>
+                    <a href="#" class="hover:text-[#00d4aa]">Blog</a>
+                </div>
+
+                <!-- Search -->
+                <div onclick="focusSearch()" class="flex-1 max-w-xl mx-8 hidden md:flex items-center bg-white/10 hover:bg-white/15 rounded-3xl px-5 py-3 text-sm border border-white/10">
+                    <i class="fa-solid fa-magnifying-glass text-zinc-400 mr-3"></i>
+                    <input 
+                        id="search-input"
+                        type="text" 
+                        placeholder="Search millions of products... Electronics, Fashion, Home & more"
+                        class="flex-1 bg-transparent outline-none placeholder-zinc-400 text-sm">
+                    <button onclick="performSearch(event)" 
+                            class="bg-[#00d4aa] hover:bg-[#00b894] text-zinc-950 text-xs font-semibold px-6 py-2 rounded-3xl flex items-center gap-x-1">
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+
+                <!-- Right side -->
+                <div class="flex items-center gap-x-6">
+                    <!-- Sell Button -->
+                    <button onclick="showSellModal()"
+                            class="hidden sm:flex items-center gap-x-2 bg-white text-zinc-950 font-semibold text-sm px-6 py-3 rounded-3xl hover:shadow-xl hover:shadow-[#00d4aa]/20">
+                        <i class="fa-solid fa-plus"></i>
+                        <span>SELL NOW</span>
+                    </button>
+
+                    <!-- Wishlist -->
+                    <button onclick="toggleWishlist()" class="relative text-xl hover:text-[#00d4aa]">
+                        <i class="fa-solid fa-heart"></i>
+                        <span id="wishlist-count" class="absolute -top-1 -right-1 text-[10px] bg-rose-500 text-white w-4 h-4 flex items-center justify-center rounded-full">3</span>
+                    </button>
+
+                    <!-- Cart -->
+                    <button onclick="toggleCart()" class="relative text-xl hover:text-[#00d4aa]">
+                        <i class="fa-solid fa-shopping-cart"></i>
+                        <span id="cart-count-badge" class="absolute -top-1 -right-1 bg-[#00d4aa] text-zinc-950 text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full">0</span>
+                    </button>
+
+                    <!-- Account -->
+                    <div onclick="showAccountModal()" class="flex items-center gap-x-2 cursor-pointer">
+                        <div class="w-8 h-8 bg-zinc-800 rounded-2xl flex items-center justify-center text-sm font-semibold ring-2 ring-[#00d4aa]/30">SV</div>
+                        <div class="hidden sm:block">
+                            <p class="text-sm font-medium">Sataveer</p>
+                            <p class="text-[10px] text-zinc-400 -mt-0.5">Premium Member</p>
+                        </div>
+                    </div>
+
+                    <!-- Mobile menu -->
+                    <button onclick="toggleMobileMenu()" class="md:hidden text-2xl">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="hidden md:hidden px-8 py-6 border-t border-white/10 bg-zinc-900">
+                <div class="flex flex-col gap-y-6 text-lg">
+                    <a onclick="navigateToSection('home');toggleMobileMenu()" class="flex items-center gap-x-3"><i class="fa-solid fa-house w-5"></i>Home</a>
+                    <a onclick="navigateToSection('shop');toggleMobileMenu()" class="flex items-center gap-x-3"><i class="fa-solid fa-store w-5"></i>Shop All</a>
+                    <a onclick="navigateToSection('sell');toggleMobileMenu()" class="flex items-center gap-x-3"><i class="fa-solid fa-plus w-5"></i>Sell Now</a>
+                    <a onclick="navigateToSection('categories');toggleMobileMenu()" class="flex items-center gap-x-3"><i class="fa-solid fa-list w-5"></i>Categories</a>
+                    <div class="pt-6 border-t border-white/10">
+                        <button onclick="showSellModal();toggleMobileMenu()" 
+                                class="w-full bg-[#00d4aa] text-zinc-950 font-semibold py-4 rounded-3xl flex items-center justify-center gap-x-2">
+                            <i class="fa-solid fa-plus"></i> START SELLING TODAY
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section id="home" class="hero-bg pt-16 pb-20">
+        <div class="max-w-screen-2xl mx-auto px-8 grid md:grid-cols-2 gap-12 items-center">
+            <div class="space-y-8">
+                <div class="inline-flex items-center bg-white/10 text-white text-sm font-medium px-6 py-3 rounded-3xl">
+                    <span class="relative flex h-3 w-3 mr-2">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00d4aa] opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-3 w-3 bg-[#00d4aa]"></span>
+                    </span>
+                    LIVE • 1,284,672 products listed today
+                </div>
+                
+                <h1 class="text-6xl md:text-7xl font-bold leading-none tracking-[-2px]" style="font-family: 'Playfair Display', sans-serif;">
+                    The Premium<br>Marketplace for<br>Buying &amp; Selling
+                </h1>
+                
+                <p class="text-xl text-zinc-400 max-w-md">
+                    Discover millions of premium products. Sell your items instantly to buyers across India and beyond.
+                </p>
+                
+                <div class="flex flex-wrap gap-4">
+                    <button onclick="navigateToSection('shop')" 
+                            class="flex-1 md:flex-none bg-[#00d4aa] hover:bg-[#00b894] text-zinc-950 font-semibold text-lg px-10 py-6 rounded-3xl flex items-center justify-center gap-x-3 shadow-2xl shadow-[#00d4aa]/30">
+                        <i class="fa-solid fa-shopping-bag"></i>
+                        SHOP NOW
+                    </button>
+                    
+                    <button onclick="showSellModal()" 
+                            class="flex-1 md:flex-none border border-white/30 hover:border-[#00d4aa] font-semibold text-lg px-10 py-6 rounded-3xl flex items-center justify-center gap-x-3">
+                        <i class="fa-solid fa-hand-holding-dollar"></i>
+                        SELL YOUR PRODUCTS
+                    </button>
+                </div>
+                
+                <div class="flex items-center gap-x-8 text-sm">
+                    <div class="flex items-center">
+                        <div class="flex -space-x-4">
+                            <div class="w-6 h-6 bg-emerald-400 rounded-2xl flex items-center justify-center text-xs ring-2 ring-zinc-950">⭐</div>
+                            <div class="w-6 h-6 bg-amber-400 rounded-2xl flex items-center justify-center text-xs ring-2 ring-zinc-950">🔥</div>
+                        </div>
+                        <p class="ml-4">4.98 average rating</p>
+                    </div>
+                    <div class="h-4 w-px bg-white/20"></div>
+                    <p class="flex items-center gap-x-1"><i class="fa-solid fa-truck text-[#00d4aa]"></i> Free shipping on orders over ₹999</p>
+                    <div class="h-4 w-px bg-white/20"></div>
+                    <p class="flex items-center gap-x-1"><i class="fa-solid fa-shield-halved text-[#00d4aa]"></i> Buyer Protection</p>
+                </div>
+            </div>
+            
+            <!-- Hero visual -->
+            <div class="relative">
+                <div class="aspect-square md:aspect-auto bg-gradient-to-br from-[#00d4aa]/10 to-transparent rounded-[3rem] p-6 border border-white/10">
+                    <div class="bg-zinc-900 rounded-3xl overflow-hidden h-full flex items-center justify-center relative">
+                        <div class="text-center">
+                            <div class="inline-flex bg-white/10 text-[#00d4aa] text-xs font-mono px-4 py-2 rounded-3xl mb-8">LIVE MARKETPLACE</div>
+                            <h2 class="text-4xl font-semibold mb-2">₹12,47,890</h2>
+                            <p class="text-zinc-400">sold in the last hour</p>
+                            
+                            <!-- Floating product cards -->
+                            <div class="absolute -top-6 -left-6 bg-zinc-800 rounded-2xl shadow-2xl p-4 w-40 rotate-[-8deg]">
+                                <img src="https://picsum.photos/id/1015/300/300" alt="Product" class="w-full h-28 object-cover rounded-xl mb-3">
+                                <p class="font-medium text-sm">iPhone 16 Pro • ₹1,09,999</p>
+                                <p class="text-[#00d4aa] text-xs">Sold by Rahul • Just now</p>
+                            </div>
+                            
+                            <div class="absolute -bottom-6 right-8 bg-zinc-800 rounded-2xl shadow-2xl p-4 w-40 rotate-[8deg]">
+                                <img src="https://picsum.photos/id/201/300/300" alt="Product" class="w-full h-28 object-cover rounded-xl mb-3">
+                                <p class="font-medium text-sm">Nike Air Jordan • ₹8,499</p>
+                                <p class="text-[#00d4aa] text-xs">Sold by Priya • 2 mins ago</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TRUST BAR -->
+    <div class="bg-white/5 py-6 border-b border-white/10">
+        <div class="max-w-screen-2xl mx-auto px-8">
+            <div class="flex flex-wrap justify-center md:justify-between items-center gap-x-8 gap-y-4 text-sm text-zinc-400">
+                <div class="flex items-center gap-x-2"><i class="fa-solid fa-truck-fast text-[#00d4aa]"></i> Instant Delivery in 142 cities</div>
+                <div class="flex items-center gap-x-2"><i class="fa-solid fa-credit-card text-[#00d4aa]"></i> 100% Secure Payments</div>
+                <div class="flex items-center gap-x-2"><i class="fa-solid fa-rotate-left text-[#00d4aa]"></i> Easy 30-day Returns</div>
+                <div class="flex items-center gap-x-2"><i class="fa-solid fa-medal text-[#00d4aa]"></i> Verified Premium Sellers</div>
+                <div class="flex items-center gap-x-2"><i class="fa-solid fa-headset text-[#00d4aa]"></i> 24×7 Customer Support</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CATEGORIES -->
+    <section id="categories" class="max-w-screen-2xl mx-auto px-8 py-16">
+        <div class="flex items-end justify-between mb-8">
+            <div>
+                <span class="uppercase text-xs tracking-[1px] text-[#00d4aa] font-medium">EXPLORE ALL PRODUCTS</span>
+                <h2 class="text-4xl font-semibold">Popular Categories</h2>
+            </div>
+            <a onclick="navigateToSection('shop')" class="text-[#00d4aa] flex items-center gap-x-2 text-sm font-medium">
+                BROWSE ALL <i class="fa-solid fa-arrow-right"></i>
+            </a>
+        </div>
+        
+        <div class="grid grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
+            <!-- Category cards -->
+            <div onclick="filterByCategory('electronics')" class="group bg-white/5 hover:bg-white/10 rounded-3xl p-6 flex flex-col items-center justify-center text-center cursor-pointer">
+                <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-400 rounded-2xl flex items-center justify-center text-4xl mb-4 group-hover:scale-110">📱</div>
+                <p class="font-semibold">Electronics</p>
+                <p class="text-xs text-zinc-400">1.2M products</p>
+            </div>
+            <div onclick="filterByCategory('fashion')" class="group bg-white/5 hover:bg-white/10 rounded-3xl p-6 flex flex-col items-center justify-center text-center cursor-pointer">
+                <div class="w-16 h-16 bg-gradient-to-br from-pink-500 to-rose-400 rounded-2xl flex items-center justify-center text-4xl mb-4 group-hover:scale-110">👗</div>
+                <p class="font-semibold">Fashion &amp; Apparel</p>
+                <p class="text-xs text-zinc-400">892K products</p>
+            </div>
+            <div onclick="filterByCategory('home')" class="group bg-white/5 hover:bg-white/10 rounded-3xl p-6 flex flex-col items-center justify-center text-center cursor-pointer">
+                <div class="w-16 h-16 bg-gradient-to-br from-amber-500 to-orange-400 rounded-2xl flex items-center justify-center text-4xl mb-4 group-hover:scale-110">🛋️</div>
+                <p class="font-semibold">Home &amp; Kitchen</p>
+                <p class="text-xs text-zinc-400">654K products</p>
+            </div>
+            <div onclick="filterByCategory('beauty')" class="group bg-white/5 hover:bg-white/10 rounded-3xl p-6 flex flex-col items-center justify-center text-center cursor-pointer">
+                <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-violet-400 rounded-2xl flex items-center justify-center text-4xl mb-4 group-hover:scale-110">💄</div>
+                <p class="font-semibold">Beauty &amp; Personal Care</p>
+                <p class="text-xs text-zinc-400">421K products</p>
+            </div>
+            <div onclick="filterByCategory('sports')" class="group bg-white/5 hover:bg-white/10 rounded-3xl p-6 flex flex-col items-center justify-center text-center cursor-pointer">
+                <div class="w-16 h-16 bg-gradient-to-br from-emerald-500 to-teal-400 rounded-2xl flex items-center justify-center text-4xl mb-4 group-hover:scale-110">⚽</div>
+                <p class="font-semibold">Sports &amp; Outdoors</p>
+                <p class="text-xs text-zinc-400">312K products</p>
+            </div>
+            <div onclick="filterByCategory('books')" class="group bg-white/5 hover:bg-white/10 rounded-3xl p-6 flex flex-col items-center justify-center text-center cursor-pointer">
+                <div class="w-16 h-16 bg-gradient-to-br from-red-500 to-rose-400 rounded-2xl flex items-center justify-center text-4xl mb-4 group-hover:scale-110">📚</div>
+                <p class="font-semibold">Books &amp; Stationery</p>
+                <p class="text-xs text-zinc-400">198K products</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURED PRODUCTS / SHOP SECTION -->
+    <section id="shop" class="max-w-screen-2xl mx-auto px-8 py-16 bg-white/5">
+        <div class="flex justify-between items-baseline mb-8">
+            <h2 class="text-4xl font-semibold">Featured Products • All Categories</h2>
+            <div class="flex items-center text-sm gap-x-2 text-zinc-400">
+                <span id="results-count">248 products</span>
+                <select id="sort-select" onchange="sortProducts()" class="bg-transparent border border-white/20 rounded-2xl py-1 px-4 text-white">
+                    <option value="popular">Most Popular</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                    <option value="newest">Newest First</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Products Grid -->
+        <div id="products-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-8">
+            <!-- Populated by JavaScript -->
+        </div>
+        
+        <div class="text-center mt-12">
+            <button onclick="loadMoreProducts()" 
+                    class="border border-white/30 hover:border-[#00d4aa] text-[#00d4aa] font-medium px-8 py-4 rounded-3xl flex items-center gap-x-3 mx-auto">
+                <span>SHOW MORE PRODUCTS</span>
+                <i class="fa-solid fa-chevron-down"></i>
+            </button>
+        </div>
+    </section>
+
+    <!-- SELL SECTION -->
+    <section id="sell" class="max-w-screen-2xl mx-auto px-8 py-20 bg-gradient-to-br from-zinc-900 to-black">
+        <div class="grid md:grid-cols-12 gap-16 items-center">
+            <div class="md:col-span-7">
+                <span class="px-6 py-2 rounded-3xl bg-white/10 text-[#00d4aa] text-sm font-medium">BECOME A SELLER IN 60 SECONDS</span>
+                <h2 class="text-5xl font-semibold leading-none mt-4 mb-6">Turn your products into cash instantly</h2>
+                <p class="text-xl text-zinc-400 max-w-lg">List your items for free. Reach millions of buyers. Get paid instantly via UPI, cards &amp; more.</p>
+                
+                <div class="mt-12 grid grid-cols-3 gap-8">
+                    <div class="text-center">
+                        <div class="text-6xl mb-4">📸</div>
+                        <h4 class="font-semibold">Upload photos</h4>
+                        <p class="text-xs text-zinc-400">Quick &amp; easy</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-6xl mb-4">💰</div>
+                        <h4 class="font-semibold">Set your price</h4>
+                        <p class="text-xs text-zinc-400">You control everything</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-6xl mb-4">🚀</div>
+                        <h4 class="font-semibold">Go live in seconds</h4>
+                        <p class="text-xs text-zinc-400">No fees to list</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="md:col-span-5">
+                <div onclick="showSellModal()" class="bg-white rounded-3xl text-zinc-950 p-8 cursor-pointer hover:shadow-2xl hover:shadow-[#00d4aa]/30">
+                    <div class="flex justify-between">
+                        <div>
+                            <p class="uppercase text-xs font-medium text-[#00d4aa]">START SELLING</p>
+                            <p class="text-4xl font-semibold mt-3 leading-none">List your first product today</p>
+                            <p class="mt-6 text-lg">Average seller earns ₹18,420 per month on My Shopes</p>
+                        </div>
+                        <i class="fa-solid fa-arrow-trend-up text-7xl text-[#00d4aa]/80"></i>
+                    </div>
+                    <button class="mt-10 w-full py-5 bg-zinc-950 text-white rounded-3xl text-lg font-semibold flex items-center justify-center gap-x-2">
+                        CREATE LISTING <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section class="max-w-screen-2xl mx-auto px-8 py-16">
+        <h2 class="text-center text-4xl font-semibold mb-12">Real buyers &amp; sellers love My Shopes</h2>
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="bg-white/5 rounded-3xl p-8">
+                <p class="italic">"Sold my old MacBook in under 3 hours. Got paid instantly. Best marketplace ever!"</p>
+                <div class="mt-8 flex items-center gap-x-4">
+                    <div class="w-10 h-10 bg-violet-400 rounded-2xl"></div>
+                    <div>
+                        <p class="font-medium">Aarav Sharma</p>
+                        <p class="text-xs text-zinc-400">Delhi • Sold 4 items</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white/5 rounded-3xl p-8">
+                <p class="italic">"Bought premium skincare from a verified seller. Fast delivery and authentic product. 5 stars!"</p>
+                <div class="mt-8 flex items-center gap-x-4">
+                    <div class="w-10 h-10 bg-pink-400 rounded-2xl"></div>
+                    <div>
+                        <p class="font-medium">Neha Patel</p>
+                        <p class="text-xs text-zinc-400">Mumbai • 27 purchases</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white/5 rounded-3xl p-8">
+                <p class="italic">"The premium feel of the website and instant buyer support made my first sale so smooth."</p>
+                <div class="mt-8 flex items-center gap-x-4">
+                    <div class="w-10 h-10 bg-emerald-400 rounded-2xl"></div>
+                    <div>
+                        <p class="font-medium">Rohan Kapoor</p>
+                        <p class="text-xs text-zinc-400">Lucknow • Seller since Jan 2026</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-black border-t border-white/10 pt-16">
+        <div class="max-w-screen-2xl mx-auto px-8 grid grid-cols-2 md:grid-cols-5 gap-y-12">
+            <div>
+                <div class="flex items-center gap-x-3 mb-6">
+                    <div class="w-8 h-8 bg-[#00d4aa] rounded-2xl flex items-center justify-center">
+                        <i class="fa-solid fa-bag-shopping text-white"></i>
+                    </div>
+                    <span class="font-bold text-3xl tracking-[-1px]" style="font-family: 'Playfair Display', sans-serif;">My Shopes</span>
+                </div>
+                <p class="text-zinc-400 text-sm">Premium marketplace for buying &amp; selling across India.</p>
+                <div class="flex gap-x-4 mt-8">
+                    <i class="fa-brands fa-instagram text-2xl"></i>
+                    <i class="fa-brands fa-x-twitter text-2xl"></i>
+                    <i class="fa-brands fa-youtube text-2xl"></i>
+                </div>
+            </div>
+            
+            <div>
+                <h5 class="font-semibold mb-6">Shop</h5>
+                <ul class="space-y-3 text-sm text-zinc-400">
+                    <li><a href="#" class="hover:text-white">All Products</a></li>
+                    <li><a href="#" class="hover:text-white">Deals of the Day</a></li>
+                    <li><a href="#" class="hover:text-white">New Arrivals</a></li>
+                </ul>
+            </div>
+            
+            <div>
+                <h5 class="font-semibold mb-6">Sell</h5>
+                <ul class="space-y-3 text-sm text-zinc-400">
+                    <li><a onclick="showSellModal()" class="hover:text-white">Start Selling</a></li>
+                    <li><a href="#" class="hover:text-white">Seller Dashboard</a></li>
+                    <li><a href="#" class="hover:text-white">Fees &amp; Payments</a></li>
+                </ul>
+            </div>
+            
+            <div>
+                <h5 class="font-semibold mb-6">Support</h5>
+                <ul class="space-y-3 text-sm text-zinc-400">
+                    <li><a href="#" class="hover:text-white">Contact Us</a></li>
+                    <li><a href="#" class="hover:text-white">Help Center</a></li>
+                    <li><a href="#" class="hover:text-white">Track Your Order</a></li>
+                    <li><a href="#" class="hover:text-white">Returns</a></li>
+                </ul>
+            </div>
+            
+            <div class="col-span-2 md:col-span-1">
+                <h5 class="font-semibold mb-6">Download the App</h5>
+                <div class="flex gap-x-4">
+                    <div class="border border-white/30 rounded-2xl px-6 py-4 text-center flex-1">
+                        <i class="fa-brands fa-apple text-3xl"></i>
+                        <p class="text-xs mt-2">App Store</p>
+                    </div>
+                    <div class="border border-white/30 rounded-2xl px-6 py-4 text-center flex-1">
+                        <i class="fa-brands fa-google-play text-3xl"></i>
+                        <p class="text-xs mt-2">Play Store</p>
+                    </div>
+                </div>
+                <p class="text-xs text-zinc-400 mt-8">© 2026 My Shopes Private Limited • Uttar Pradesh, India</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- PRODUCT DETAIL MODAL -->
+    <div onclick="if(event.target.id === 'product-modal')hideProductModal()" 
+         id="product-modal"
+         class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-[9999] flex items-center justify-center">
+        
+        <div onclick="event.stopImmediatePropagation()" 
+             class="bg-white text-zinc-950 max-w-2xl w-full mx-4 rounded-3xl overflow-hidden modal">
+            <div id="modal-content" class="p-8">
+                <!-- JS injected -->
+            </div>
+        </div>
+    </div>
+
+    <!-- SELL LISTING MODAL -->
+    <div onclick="if(event.target.id === 'sell-modal')hideSellModal()" 
+         id="sell-modal"
+         class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-[9999] flex items-center justify-center">
+        
+        <div onclick="event.stopImmediatePropagation()" 
+             class="bg-zinc-900 w-full max-w-lg mx-4 rounded-3xl modal">
+            <div class="px-8 py-6 border-b border-white/10 flex items-center justify-between">
+                <h3 class="text-2xl font-semibold">Create New Listing</h3>
+                <i onclick="hideSellModal()" class="fa-solid fa-xmark text-2xl cursor-pointer"></i>
+            </div>
+            
+            <form id="sell-form" onsubmit="submitListing(event)" class="p-8 space-y-8">
+                <div>
+                    <label class="text-xs uppercase font-medium text-zinc-400">Product Title</label>
+                    <input id="listing-title" type="text" required placeholder="e.g. Samsung Galaxy S25" 
+                           class="w-full mt-2 bg-white/10 border border-white/10 rounded-2xl px-6 py-5 outline-none">
+                </div>
+                
+                <div class="grid grid-cols-2 gap-6">
+                    <div>
+                        <label class="text-xs uppercase font-medium text-zinc-400">Price (₹)</label>
+                        <input id="listing-price" type="number" required placeholder="89999" 
+                               class="w-full mt-2 bg-white/10 border border-white/10 rounded-2xl px-6 py-5 outline-none">
+                    </div>
+                    <div>
+                        <label class="text-xs uppercase font-medium text-zinc-400">Category</label>
+                        <select id="listing-category" class="w-full mt-2 bg-white/10 border border-white/10 rounded-2xl px-6 py-5 outline-none">
+                            <option value="electronics">Electronics</option>
+                            <option value="fashion">Fashion</option>
+                            <option value="home">Home & Kitchen</option>
+                            <option value="beauty">Beauty</option>
+                            <option value="sports">Sports</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div>
+                    <label class="text-xs uppercase font-medium text-zinc-400">Description</label>
+                    <textarea id="listing-desc" rows="3" required placeholder="Describe your product..." 
+                              class="w-full mt-2 bg-white/10 border border-white/10 rounded-2xl px-6 py-5 outline-none"></textarea>
+                </div>
+                
+                <div>
+                    <label class="text-xs uppercase font-medium text-zinc-400 mb-3 block">Upload Photos (max 5)</label>
+                    <div class="border border-dashed border-white/30 rounded-3xl py-12 text-center">
+                        <i class="fa-solid fa-cloud-upload text-5xl text-[#00d4aa]"></i>
+                        <p class="mt-4 text-sm">Drag &amp; drop or click to upload</p>
+                        <p class="text-xs text-zinc-400 mt-1">JPG, PNG • High resolution recommended</p>
+                    </div>
+                </div>
+                
+                <button type="submit" 
+                        class="w-full py-6 text-lg bg-[#00d4aa] hover:bg-[#00b894] text-zinc-950 font-semibold rounded-3xl">
+                    PUBLISH LISTING • GO LIVE
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- CART DRAWER -->
+    <div onclick="if(event.target.id === 'cart-drawer')toggleCart()" 
+         id="cart-drawer"
+         class="hidden fixed inset-0 bg-black/60 z-[10000] flex justify-end">
+        
+        <div onclick="event.stopImmediatePropagation()" 
+             class="cart-slide bg-white text-zinc-950 w-full max-w-md h-full overflow-auto">
+            
+            <div class="p-8 border-b flex items-center justify-between sticky top-0 bg-white z-10">
+                <h2 class="text-3xl font-semibold">Your Cart</h2>
+                <i onclick="toggleCart()" class="fa-solid fa-xmark text-3xl cursor-pointer"></i>
+            </div>
+            
+            <div id="cart-items" class="px-8 py-6 space-y-8 min-h-[400px]">
+                <!-- JS injected cart items -->
+            </div>
+            
+            <div class="sticky bottom-0 bg-white border-t p-8">
+                <div class="flex justify-between text-xl mb-6">
+                    <span class="font-medium">Total</span>
+                    <span id="cart-total" class="font-semibold">₹0</span>
+                </div>
+                <button onclick="checkout()" 
+                        class="w-full py-6 bg-gradient-to-r from-[#00d4aa] to-emerald-500 text-white text-xl font-semibold rounded-3xl">
+                    PROCEED TO CHECKOUT
+                </button>
+                <p class="text-xs text-center text-zinc-400 mt-6">or 3 payments of ₹X with UPI • No cost EMI available</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ACCOUNT MODAL -->
+    <div onclick="if(event.target.id === 'account-modal')hideAccountModal()" 
+         id="account-modal"
+         class="hidden fixed inset-0 bg-black/70 z-[9999] flex items-center justify-center">
+        <div onclick="event.stopImmediatePropagation()" class="bg-zinc-900 rounded-3xl w-full max-w-md mx-4 modal p-8">
+            <div class="flex justify-between items-center mb-8">
+                <h3 class="text-2xl font-semibold">My Account</h3>
+                <i onclick="hideAccountModal()" class="fa-solid fa-xmark cursor-pointer"></i>
+            </div>
+            
+            <div class="flex items-center gap-x-6 mb-8">
+                <div class="w-16 h-16 bg-gradient-to-br from-[#00d4aa] to-cyan-400 rounded-3xl flex items-center justify-center text-4xl">👋</div>
+                <div>
+                    <p class="text-2xl">Hi Sataveer 👋</p>
+                    <p class="text-emerald-400 text-sm">Premium Member since March 2026</p>
+                </div>
+            </div>
+            
+            <div class="space-y-6">
+                <a href="#" class="flex justify-between items-center py-4 border-b border-white/10">
+                    <span class="flex items-center gap-x-4"><i class="fa-solid fa-heart w-6"></i> Wishlist (3)</span>
+                    <i class="fa-solid fa-chevron-right"></i>
+                </a>
+                <a href="#" class="flex justify-between items-center py-4 border-b border-white/10">
+                    <span class="flex items-center gap-x-4"><i class="fa-solid fa-bag-shopping w-6"></i> My Purchases</span>
+                    <i class="fa-solid fa-chevron-right"></i>
+                </a>
+                <a href="#" onclick="hideAccountModal();showSellModal()" class="flex justify-between items-center py-4 border-b border-white/10">
+                    <span class="flex items-center gap-x-4"><i class="fa-solid fa-store w-6"></i> My Listings</span>
+                    <i class="fa-solid fa-chevron-right"></i>
+                </a>
+                <a href="#" class="flex justify-between items-center py-4 border-b border-white/10">
+                    <span class="flex items-center gap-x-4"><i class="fa-solid fa-gear w-6"></i> Settings</span>
+                    <i class="fa-solid fa-chevron-right"></i>
+                </a>
+            </div>
+            
+            <button onclick="logout()" class="mt-12 w-full text-red-400 font-medium flex items-center justify-center gap-x-2">
+                <i class="fa-solid fa-right-from-bracket"></i> LOG OUT
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // TailwindCSS initialization
+        function initializeTailwind() {
+            return {
+                config(userConfig = {}) {
+                    return {
+                        content: [],
+                        theme: {
+                            extend: {
+                                colors: {
+                                    primary: '#00d4aa'
+                                }
+                            }
+                        },
+                        plugins: [],
+                        ...userConfig,
+                    }
+                },
+                theme: {
+                    extend: {},
+                },
+            }
+        }
+        
+        // Global products data
+        let allProducts = [
+            {
+                id: 1,
+                name: "Samsung Galaxy S25 Ultra",
+                price: 124999,
+                category: "electronics",
+                img: "https://picsum.photos/id/1015/600/600",
+                rating: 4.9,
+                sold: 1243
+            },
+            {
+                id: 2,
+                name: "Nike Air Jordan 1 Retro",
+                price: 8499,
+                category: "fashion",
+                img: "https://picsum.photos/id/1005/600/600",
+                rating: 5,
+                sold: 892
+            },
+            {
+                id: 3,
+                name: "Dyson V15 Vacuum Cleaner",
+                price: 52999,
+                category: "home",
+                img: "https://picsum.photos/id/201/600/600",
+                rating: 4.8,
+                sold: 312
+            },
+            {
+                id: 4,
+                name: "The Ordinary Skincare Set",
+                price: 2499,
+                category: "beauty",
+                img: "https://picsum.photos/id/1009/600/600",
+                rating: 4.7,
+                sold: 1456
+            },
+            {
+                id: 5,
+                name: "Adidas Predator Football Boots",
+                price: 6999,
+                category: "sports",
+                img: "https://picsum.photos/id/1003/600/600",
+                rating: 4.9,
+                sold: 678
+            },
+            {
+                id: 6,
+                name: "Atomic Habits - Hardcover",
+                price: 599,
+                category: "books",
+                img: "https://picsum.photos/id/201/600/600",
+                rating: 5,
+                sold: 2341
+            },
+            {
+                id: 7,
+                name: "Sony WH-1000XM5 Headphones",
+                price: 28990,
+                category: "electronics",
+                img: "https://picsum.photos/id/133/600/600",
+                rating: 4.9,
+                sold: 987
+            },
+            {
+                id: 8,
+                name: "Levi's 501 Original Jeans",
+                price: 3299,
+                category: "fashion",
+                img: "https://picsum.photos/id/1009/600/600",
+                rating: 4.6,
+                sold: 1543
+            },
+            {
+                id: 9,
+                name: "Instant Pot Duo Nova 7-in-1",
+                price: 8999,
+                category: "home",
+                img: "https://picsum.photos/id/29/600/600",
+                rating: 4.8,
+                sold: 421
+            },
+            {
+                id: 10,
+                name: "Maybelline New York Mascara",
+                price: 499,
+                category: "beauty",
+                img: "https://picsum.photos/id/1005/600/600",
+                rating: 4.7,
+                sold: 3124
+            }
+        ]
+        
+        let cart = []
+        let wishlist = [2, 4, 7]
+        
+        // Render all products
+        function renderProducts(products) {
+            const container = document.getElementById('products-grid')
+            container.innerHTML = ''
+            
+            document.getElementById('results-count').textContent = `${products.length} products`
+            
+            products.forEach(product => {
+                const cardHTML = `
+                <div onclick="showProductDetail(${product.id})" class="product-card bg-white/5 rounded-3xl overflow-hidden cursor-pointer">
+                    <div class="relative">
+                        <img src="${product.img}" alt="${product.name}" class="w-full h-64 object-cover">
+                        <div class="absolute top-4 right-4 bg-white/90 text-zinc-950 text-xs font-semibold px-3 py-1 rounded-3xl flex items-center">
+                            <i class="fa-solid fa-fire mr-1"></i> ${product.sold} sold
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <p class="font-semibold text-base">${product.name}</p>
+                                <p class="text-xs text-zinc-400 uppercase mt-px">${product.category}</p>
+                            </div>
+                            <div onclick="event.stopImmediatePropagation(); toggleWishlistItem(${product.id});" class="text-2xl ${wishlist.includes(product.id) ? 'text-rose-500' : 'text-zinc-300'}">
+                                <i class="${wishlist.includes(product.id) ? 'fa-solid' : 'fa-regular'} fa-heart"></i>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-between items-end mt-6">
+                            <div>
+                                <span class="text-3xl font-semibold">₹${product.price.toLocaleString('en-IN')}</span>
+                            </div>
+                            <div class="flex items-center text-amber-400 text-sm">
+                                ${product.rating} <i class="fa-solid fa-star ml-1"></i>
+                            </div>
+                        </div>
+                        
+                        <button onclick="event.stopImmediatePropagation(); addToCart(${product.id});" 
+                                class="mt-6 w-full bg-[#00d4aa] text-zinc-950 py-4 rounded-3xl font-medium text-sm flex items-center justify-center">
+                            <i class="fa-solid fa-cart-plus mr-2"></i> ADD TO CART
+                        </button>
+                    </div>
+                </div>`
+                container.innerHTML += cardHTML
+            })
+            
+            // If no products
+            if (products.length === 0) {
+                container.innerHTML = `<div class="col-span-full py-20 text-center text-zinc-400">No products found in this category</div>`
+            }
+        }
+        
+        // Show single product detail
+        function showProductDetail(id) {
+            const product = allProducts.find(p => p.id === id)
+            if (!product) return
+            
+            const modal = document.getElementById('product-modal')
+            const content = document.getElementById('modal-content')
+            
+            content.innerHTML = `
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <img src="${product.img}" alt="${product.name}" class="rounded-3xl w-full">
+                </div>
+                <div>
+                    <div class="flex justify-between">
+                        <span class="uppercase text-xs font-semibold text-[#00d4aa]">${product.category}</span>
+                        <span onclick="hideProductModal()" class="cursor-pointer"><i class="fa-solid fa-xmark"></i></span>
+                    </div>
+                    <h1 class="text-4xl font-semibold mt-3">${product.name}</h1>
+                    <div class="flex gap-x-1 text-amber-400 mt-4">
+                        ${Array(5).fill('<i class="fa-solid fa-star"></i>').join('')}
+                        <span class="text-zinc-400 text-sm ml-3">${product.rating} • ${product.sold} sold</span>
+                    </div>
+                    
+                    <div class="my-8">
+                        <span class="text-5xl font-semibold">₹${product.price.toLocaleString('en-IN')}</span>
+                    </div>
+                    
+                    <p class="text-zinc-500">Premium quality product. 100% authentic. Fast shipping across India.</p>
+                    
+                    <div class="mt-8 flex gap-x-4">
+                        <button onclick="addToCart(${product.id});hideProductModal()" class="flex-1 py-6 bg-[#00d4aa] text-zinc-950 rounded-3xl font-semibold">ADD TO CART</button>
+                        <button onclick="toggleWishlistItem(${product.id});hideProductModal()" class="flex-1 border-2 border-zinc-300 py-6 rounded-3xl font-semibold">ADD TO WISHLIST</button>
+                    </div>
+                    
+                    <div class="mt-auto pt-8 text-xs flex items-center gap-x-8 text-zinc-400">
+                        <div>✅ Free delivery</div>
+                        <div>✅ 30-day return</div>
+                        <div>✅ Verified seller</div>
+                    </div>
+                </div>
+            </div>`
+            
+            modal.style.display = 'flex'
+        }
+        
+        function hideProductModal() {
+            document.getElementById('product-modal').style.display = 'none'
+        }
+        
+        // Add item to cart
+        function addToCart(id) {
+            const product = allProducts.find(p => p.id === id)
+            if (!product) return
+            
+            // Check if already in cart
+            const existing = cart.find(item => item.id === id)
+            if (existing) {
+                existing.quantity = (existing.quantity || 1) + 1
+            } else {
+                cart.push({...product, quantity: 1})
+            }
+            
+            updateCartCount()
+            showToast(`${product.name} added to cart`)
+        }
+        
+        function updateCartCount() {
+            const totalItems = cart.reduce((acc, item) => acc + (item.quantity || 1), 0)
+            document.getElementById('cart-count-badge').textContent = totalItems
+        }
+        
+        // Toggle full cart drawer
+        function toggleCart() {
+            const drawer = document.getElementById('cart-drawer')
+            const container = document.getElementById('cart-items')
+            
+            if (drawer.style.display === 'flex') {
+                drawer.style.display = 'none'
+                return
+            }
+            
+            container.innerHTML = ''
+            
+            if (cart.length === 0) {
+                container.innerHTML = `<div class="text-center py-20"><i class="fa-solid fa-shopping-cart text-7xl text-zinc-300 mb-6"></i><p class="font-medium">Your cart is empty</p><p class="text-zinc-400 text-sm mt-2">Start shopping on My Shopes!</p></div>`
+            } else {
+                cart.forEach((item, index) => {
+                    const itemHTML = `
+                    <div class="flex gap-x-4 border-b pb-8">
+                        <img src="${item.img}" class="w-20 h-20 object-cover rounded-2xl">
+                        <div class="flex-1">
+                            <p class="font-medium">${item.name}</p>
+                            <p class="text-sm text-zinc-400">₹${item.price.toLocaleString('en-IN')}</p>
+                            <div class="flex items-center mt-4">
+                                <button onclick="changeCartQuantity(${index}, -1)" class="w-8 h-8 flex items-center justify-center border border-zinc-300 rounded-2xl">-</button>
+                                <span class="px-6 font-medium">${item.quantity || 1}</span>
+                                <button onclick="changeCartQuantity(${index}, 1)" class="w-8 h-8 flex items-center justify-center border border-zinc-300 rounded-2xl">+</button>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-semibold text-xl">₹${(item.price * (item.quantity || 1)).toLocaleString('en-IN')}</p>
+                            <button onclick="removeFromCart(${index});" class="text-xs text-red-500 mt-8">REMOVE</button>
+                        </div>
+                    </div>`
+                    container.innerHTML += itemHTML
+                })
+            }
+            
+            // Total
+            const total = cart.reduce((sum, item) => sum + (item.price * (item.quantity || 1)), 0)
+            document.getElementById('cart-total').innerHTML = `₹${total.toLocaleString('en-IN')}`
+            
+            drawer.style.display = 'flex'
+        }
+        
+        function changeCartQuantity(index, change) {
+            const item = cart[index]
+            if (!item) return
+            let qty = item.quantity || 1
+            qty += change
+            if (qty < 1) qty = 1
+            item.quantity = qty
+            toggleCart() // refresh
+            toggleCart() // open again
+        }
+        
+        function removeFromCart(index) {
+            cart.splice(index, 1)
+            updateCartCount()
+            toggleCart()
+            toggleCart()
+        }
+        
+        function checkout() {
+            toggleCart()
+            setTimeout(() => {
+                alert('🎉 Thank you! Your order has been placed successfully.\n\nPayment of ₹' + cart.reduce((sum, item) => sum + (item.price * (item.quantity || 1)), 0).toLocaleString('en-IN') + ' completed via UPI.')
+                cart = []
+                updateCartCount()
+            }, 800)
+        }
+        
+        // Wishlist
+        function toggleWishlistItem(id) {
+            if (wishlist.includes(id)) {
+                wishlist = wishlist.filter(item => item !== id)
+            } else {
+                wishlist.push(id)
+            }
+            document.getElementById('wishlist-count').textContent = wishlist.length
+            renderProducts(allProducts) // refresh cards
+        }
+        
+        function toggleWishlist() {
+            alert('❤️ Wishlist items:\n\n' + wishlist.map(id => {
+                const p = allProducts.find(prod => prod.id === id)
+                return '• ' + (p ? p.name : 'Product #' + id)
+            }).join('\n'))
+        }
+        
+        // Sell modal
+        function showSellModal() {
+            document.getElementById('sell-modal').style.display = 'flex'
+        }
+        
+        function hideSellModal() {
+            document.getElementById('sell-modal').style.display = 'none'
+        }
+        
+        function submitListing(e) {
+            e.preventDefault()
+            
+            const title = document.getElementById('listing-title').value
+            const price = parseInt(document.getElementById('listing-price').value)
+            
+            hideSellModal()
+            
+            // Simulate successful listing
+            setTimeout(() => {
+                alert(`✅ Congratulations! Your listing "${title}" priced at ₹${price} has been published live on My Shopes.\n\nBuyers will start contacting you soon!`)
+                
+                // Add a fake new product to the list
+                const newProduct = {
+                    id: Date.now(),
+                    name: title,
+                    price: price,
+                    category: document.getElementById('listing-category').value,
+                    img: "https://picsum.photos/id/" + Math.floor(Math.random() * 200) + "/600/600",
+                    rating: 5,
+                    sold: 0
+                }
+                allProducts.unshift(newProduct)
+                renderProducts(allProducts)
+            }, 600)
+        }
+        
+        // Account modal
+        function showAccountModal() {
+            document.getElementById('account-modal').style.display = 'flex'
+        }
+        
+        function hideAccountModal() {
+            document.getElementById('account-modal').style.display = 'none'
+        }
+        
+        function logout() {
+            hideAccountModal()
+            alert('👋 You have been logged out.\n\nThank you for shopping on My Shopes!')
+        }
+        
+        // Mobile menu
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu')
+            menu.classList.toggle('hidden')
+        }
+        
+        // Simple search
+        function focusSearch() {
+            const input = document.getElementById('search-input')
+            input.focus()
+        }
+        
+        function performSearch(e) {
+            e.stopImmediatePropagation()
+            const query = document.getElementById('search-input').value.toLowerCase().trim()
+            
+            if (!query) return
+            
+            const filtered = allProducts.filter(p => 
+                p.name.toLowerCase().includes(query) || 
+                p.category.toLowerCase().includes(query)
+            )
+            
+            navigateToSection('shop')
+            renderProducts(filtered.length > 0 ? filtered : allProducts)
+            
+            // Clear search
+            document.getElementById('search-input').value = ''
+        }
+        
+        // Filter by category
+        function filterByCategory(cat) {
+            navigateToSection('shop')
+            const filtered = allProducts.filter(p => p.category === cat)
+            renderProducts(filtered)
+        }
+        
+        // Sort products
+        function sortProducts() {
+            const sortType = document.getElementById('sort-select').value
+            let sorted = [...allProducts]
+            
+            if (sortType === 'price-low') {
+                sorted.sort((a, b) => a.price - b.price)
+            } else if (sortType === 'price-high') {
+                sorted.sort((a, b) => b.price - a.price)
+            } else if (sortType === 'newest') {
+                // Fake newest
+                sorted.reverse()
+            }
+            // popular is default order
+            
+            renderProducts(sorted)
+        }
+        
+        function loadMoreProducts() {
+            // Simulate loading more (duplicate for demo)
+            const more = allProducts.slice(0, 4)
+            allProducts = [...allProducts, ...more]
+            renderProducts(allProducts)
+        }
+        
+        // Section navigation (smooth scroll)
+        function navigateToSection(section) {
+            document.getElementById(section).scrollIntoView({ behavior: 'smooth' })
+            
+            // Close mobile menu if open
+            const mobile = document.getElementById('mobile-menu')
+            if (!mobile.classList.contains('hidden')) mobile.classList.add('hidden')
+        }
+        
+        // Toast notification
+        function showToast(message) {
+            const toast = document.createElement('div')
+            toast.style.cssText = 'position:fixed; bottom:24px; right:24px; background:#00d4aa; color:#0a0a0a; padding:16px 24px; border-radius:9999px; box-shadow:0 10px 15px -3px rgb(0 212 170); font-weight:600; z-index:99999;'
+            toast.textContent = message
+            document.body.appendChild(toast)
+            
+            setTimeout(() => {
+                toast.style.transform = 'translateY(100px)'
+                toast.style.opacity = '0'
+                setTimeout(() => toast.remove(), 300)
+            }, 2800)
+        }
+        
+        // Main initialization
+        function initializeWebsite() {
+            initializeTailwind()
+            
+            // Render initial products
+            renderProducts(allProducts)
+            
+            // Update wishlist count
+            document.getElementById('wishlist-count').textContent = wishlist.length
+            
+            console.log('%c✅ My Shopes Premium Marketplace loaded successfully!', 'background:#00d4aa;color:#0a0a0a;font-size:13px;padding:2px 6px;border-radius:4px')
+            console.log('👋 Hello Sataveer! Welcome to your premium shopping & selling website.')
+        }
+        
+        // Boot the site
+        window.onload = initializeWebsite
+    </script>
+</body>
+</html>
